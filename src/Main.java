@@ -4,7 +4,7 @@ public class Main {
         //ConsoleTicTacToe consoleGame = new ConsoleTicTacToe(new Game(3, 3));
         //consoleGame.start();
 
-        GUITicTacToe guiGame = new GUITicTacToe(new Game(3,3));
+        GUITicTacToe guiGame = new GUITicTacToe(new Game(3, 3));
         guiGame.start();
 
 
