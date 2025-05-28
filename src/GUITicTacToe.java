@@ -34,7 +34,6 @@ public class GUITicTacToe {
         updateGUIButton(row, col, "X");
     }
 
-
     public void processTurn(int row, int col) {
         userClickHandler(row, col);
         if (!myGame.GUIVictory(Game.WinState.HUMAN_WIN, this)) {

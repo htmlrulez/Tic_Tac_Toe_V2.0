@@ -49,7 +49,6 @@ public class ConsoleTicTacToe {
         System.out.println("+");
     }
 
-
     public void drawConsoleGameBorder() {
         int gameRow = myGame.getGameRow();
         int gameColumn = myGame.getGameColumn();
@@ -92,7 +91,6 @@ public class ConsoleTicTacToe {
         }
         myGame.setCellState(row, col, Game.GridState.HUMAN);
     }
-
 
     private boolean consoleReset() {
         System.out.println("Do you want to play again? Y/N");
