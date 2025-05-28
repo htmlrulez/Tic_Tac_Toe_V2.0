@@ -4,9 +4,6 @@ public class Game {
     private int gameRow;
     private int gameColumn;
     private GridState[][] gameArray;
-    public String humanVicotry = "Human WINS - Game Over!";
-    public String computerVicotry = "Computer WINS - Game Over!";
-    public String tie = "GAME IS TIE - Game Over!";
 
     public Game(int gameRow, int gameColumn) {
         this.gameRow = gameRow;
@@ -15,10 +12,20 @@ public class Game {
     }
 
     enum WinState{
-        NO_WIN,
-        HUMAN_WIN,
-        COMPUTER_WIN,
-        TIE,
+        NO_WIN(""),
+        HUMAN_WIN("Human WINS - Game Over!"),
+        COMPUTER_WIN("Computer WINS - Game Over!"),
+        TIE("GAME IS TIE - Game Over!");
+
+        private final String message;
+
+        WinState(String message) {
+            this.message = message;
+        }
+
+        public String getMessage() {
+            return message;
+        }
     }
 
     enum GridState {
@@ -35,9 +42,6 @@ public class Game {
         return gameColumn;
     }
 
-    public GridState[][] getGridState() {
-        return gameArray;
-    }
 
     public GridState getGameStateCellInfo(int row, int column) {
         return gameArray[row][column];
@@ -45,11 +49,7 @@ public class Game {
 
     public GridState[][] setGameArray() {
         gameArray = new GridState[gameRow][gameColumn];
-        for (int i = 0; i < gameRow; i++) {
-            for (int j = 0; j < gameColumn; j++) {
-                gameArray[i][j] = GridState.EMPTY;
-            }
-        }
+        fillGameArray();
         return gameArray;
     }
 
@@ -78,7 +78,55 @@ public class Game {
         }
     }
 
-    public WinState checkForWinEnum(GridState player) {
+    public boolean consoleVictory(Game.WinState state, ConsoleTicTacToe console) {
+
+        Game.WinState result = enumWinChecker(Game.GridState.HUMAN);
+        if (result == state) {
+            console. drawConsoleGameBorder();
+            System.out.println(state.getMessage());
+            return true;
+        }
+
+        result = enumWinChecker(Game.GridState.COMPUTER);
+        if (result == state) {
+            console. drawConsoleGameBorder();
+            System.out.println(state.getMessage());
+            return true;
+        }
+
+        if (enumWinChecker(Game.GridState.HUMAN) == Game.WinState.TIE ||
+                enumWinChecker(Game.GridState.COMPUTER) == Game.WinState.TIE) {
+            console. drawConsoleGameBorder();
+            System.out.println(Game.WinState.TIE.getMessage());
+            return true;
+        }
+        return false;
+    }
+
+
+    public boolean GUIVictory(Game.WinState state, GUITicTacToe gui) {
+        Game.WinState result = enumWinChecker(Game.GridState.HUMAN);
+        if (result == state) {
+            gui.setGameEndUIFrame(state.getMessage());
+            return true;
+        }
+
+        result = enumWinChecker(Game.GridState.COMPUTER);
+        if (result == state) {
+            gui.setGameEndUIFrame(state.getMessage());
+            return true;
+        }
+
+        if (enumWinChecker(Game.GridState.HUMAN) == Game.WinState.TIE ||
+                enumWinChecker(Game.GridState.COMPUTER) == Game.WinState.TIE) {
+            gui.setGameEndUIFrame(Game.WinState.TIE.getMessage());
+            return true;
+        }
+        return false;
+    }
+
+
+    public WinState enumWinChecker(GridState player) {
         if (checkRows(player) || checkColumns(player) || checkDiagonals(player)) {
             return player == GridState.HUMAN ? WinState.HUMAN_WIN : WinState.COMPUTER_WIN;
         }

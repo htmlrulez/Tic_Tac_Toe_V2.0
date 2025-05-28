@@ -1,59 +1,36 @@
 import java.util.Scanner;
 
 public class ConsoleTicTacToe {
-    private int gameRow;
-    private int gameColumn;
     private final Game myGame;
     private Scanner myScanner = new Scanner(System.in);
 
     public ConsoleTicTacToe(Game game) {
         this.myGame = game;
-        this.gameRow = game.getGameRow();
-        this.gameColumn = game.getGameColumn();
     }
 
     public void start() {
         boolean keepPlaying = true;
         while (keepPlaying) {
-            myGame.setGameArray();
-
             boolean gameOver = false;
             while (!gameOver) {
-                consoleState();
+                drawConsoleGameBorder();
                 humanConsoleTurn();
-                Game.WinState result = myGame.checkForWinEnum(Game.GridState.HUMAN);
-                switch (result) {
-                    case HUMAN_WIN:
-                        consoleState();
-                        System.out.println("Human Wins");
-                        gameOver = true;
-                        break;
-                    case TIE:
-                        consoleState();
-                        System.out.println("Game is Tie");
-                        gameOver = true;
-                        break;
-                }
-                if (gameOver) {
+                if ( myGame.consoleVictory(Game.WinState.HUMAN_WIN, this)){
                     break;
                 }
-
+                if ( myGame.consoleVictory(Game.WinState.TIE, this)){
+                    break;
+                }
                 myGame.invokeAI();
-                result = myGame.checkForWinEnum(Game.GridState.COMPUTER);
-                switch (result) {
-                    case COMPUTER_WIN:
-                        consoleState();
-                        System.out.println("Computer Wins");
-                        gameOver = true;
-                        break;
-                    case TIE:
-                        consoleState();
-                        System.out.println("Game is Tie");
-                        gameOver = true;
-                        break;
+                if ( myGame.consoleVictory(Game.WinState.COMPUTER_WIN, this)){
+                    break;
+                }
+                if ( myGame.consoleVictory(Game.WinState.TIE, this)){
+                    break;
                 }
             }
-        keepPlaying = consoleReset();
+            keepPlaying = consoleReset();
+            myGame.setGameArray();
         }
     }
 
@@ -73,7 +50,7 @@ public class ConsoleTicTacToe {
     }
 
 
-    private void consoleState() {
+    public void drawConsoleGameBorder() {
         int gameRow = myGame.getGameRow();
         int gameColumn = myGame.getGameColumn();
 
@@ -98,13 +75,12 @@ public class ConsoleTicTacToe {
         }
     }
 
-
     public void humanConsoleTurn() {
         System.out.println("Where you want to place X, input ROW, COL");
         int row = myScanner.nextInt();
         int col = myScanner.nextInt();
 
-        if (row < 0 || row >= gameRow || col < 0 || col >= gameColumn) {
+        if (row < 0 || row >= myGame.getGameRow() || col < 0 || col >= myGame.getGameColumn()) {
             System.out.println("Invalid input. Try again.");
             humanConsoleTurn();
             return;
@@ -116,6 +92,7 @@ public class ConsoleTicTacToe {
         }
         myGame.setCellState(row, col, Game.GridState.HUMAN);
     }
+
 
     private boolean consoleReset() {
         System.out.println("Do you want to play again? Y/N");

@@ -15,7 +15,6 @@ public class gameEndButtonListener implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        winFrame.dispose();
-        gui.restartGame();
+        gui.restartGame(winFrame);
     }
 }

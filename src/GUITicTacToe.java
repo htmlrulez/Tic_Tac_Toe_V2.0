@@ -2,8 +2,6 @@ import javax.swing.*;
 import java.awt.*;
 
 public class GUITicTacToe {
-    private final int gameRow;
-    private final int gameCol;
     private final int gameWidth = 800;
     private final int gameHeight = 600;
     private final Game myGame;
@@ -13,34 +11,35 @@ public class GUITicTacToe {
 
     public GUITicTacToe(Game myGame) {
         this.myGame = myGame;
-        this.gameRow = myGame.getGameRow();
-        this.gameCol = myGame.getGameColumn();
         this.gamePanel = setGamePanel();
         this.gameFrame = setGameFrame();
     }
 
    public void start(){
-        generateAllButtons();
-        setUI();
+       generatePlayableButtons();
+       setUI();
+
    }
 
     public JButton getButton(int row, int col) {
         return allPlayableButtons[row][col];
     }
 
+
     public void userClickHandler(int row, int col) {
-        if(!validMove(row, col)){
+        if(!checkValidMove(row, col)){
             return;
         }
         setHumanUIMove(row, col);
         updateGUIButton(row, col, "X");
     }
 
+
     public void processTurn(int row, int col) {
         userClickHandler(row, col);
-        if (!checkGameStatusAndUpdateUI(Game.GridState.HUMAN)) {
+        if (!myGame.GUIVictory(Game.WinState.HUMAN_WIN, this)) {
             computerMove();
-            checkGameStatusAndUpdateUI(Game.GridState.COMPUTER);
+            myGame.GUIVictory(Game.WinState.COMPUTER_WIN, this);
         }
     }
 
@@ -50,24 +49,7 @@ public class GUITicTacToe {
 
     }
 
-    public boolean checkGameStatusAndUpdateUI(Game.GridState state) {
-        Game.WinState result = myGame.checkForWinEnum(state);
-        switch(result) {
-            case HUMAN_WIN:
-                setWinUI(myGame.humanVicotry);
-                return true;
-            case COMPUTER_WIN:
-                setWinUI(myGame.computerVicotry);
-                return true;
-            case TIE:
-                setWinUI(myGame.tie);
-                return true;
-            default:
-                return false;
-        }
-    }
-
-    public void setWinUI(String message) {
+    public void setGameEndUIFrame(String message) {
         JFrame winFrame = new JFrame();
         winFrame.setSize(gameWidth, gameHeight);
         winFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
@@ -79,11 +61,12 @@ public class GUITicTacToe {
         winFrame.setVisible(true);
     }
 
-    public void restartGame() {
+    public void restartGame(JFrame winFrame) {
+        winFrame.dispose();
         myGame.fillGameArray();
         gamePanel.removeAll();
-        generateAllButtons();
-        gamePanel.setLayout(new GridLayout(gameRow, gameCol));
+        generatePlayableButtons();
+        gamePanel.setLayout(new GridLayout(myGame.getGameRow(), myGame.getGameColumn()));
         gamePanel.revalidate();
         gamePanel.repaint();
     }
@@ -100,16 +83,16 @@ public class GUITicTacToe {
         gameFrame.setSize(gameWidth, gameHeight);
         gameFrame.setTitle("Tic Tac Toe");
         gameFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        gamePanel.setLayout(new GridLayout(gameRow, gameCol));
+        gamePanel.setLayout(new GridLayout(myGame.getGameRow(), myGame.getGameColumn()));
         gameFrame.add(gamePanel);
         gameFrame.setVisible(true);
     }
 
-    private void generateAllButtons() {
-        allPlayableButtons = new JButton[gameRow][gameCol];
+    private void generatePlayableButtons() {
+        allPlayableButtons = new JButton[myGame.getGameRow()][myGame.getGameColumn()];
 
-        for (int row = 0; row < gameRow; row++) {
-            for (int column = 0; column < gameCol; column++) {
+        for (int row = 0; row < myGame.getGameRow(); row++) {
+            for (int column = 0; column < myGame.getGameColumn(); column++) {
                 ClickListener myListener = new ClickListener(row, column, this);
                 JButton button = generateButton(" ");
                 button.addActionListener(myListener);
@@ -119,8 +102,8 @@ public class GUITicTacToe {
         }
     }
 
-    private boolean validMove(int row, int col) {
-        return myGame.getGridState()[row][col] == Game.GridState.EMPTY;
+    private boolean checkValidMove(int row, int col) {
+       return myGame.getGameStateCellInfo(row, col) == Game.GridState.EMPTY;
     }
 
     private void setHumanUIMove(int row, int col) {

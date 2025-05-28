@@ -5,7 +5,6 @@ public class ClickListener implements ActionListener {
 
     private final int row;
     private final int column;
-    private Game.GridState cellValue;
     private final GUITicTacToe gui;
 
     public ClickListener(int row, int column, GUITicTacToe gui) {
