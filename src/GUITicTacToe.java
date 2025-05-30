@@ -1,7 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 
-public class GUITicTacToe {
+public class GUITicTacToe implements GameUI {
   private final int gameWidth = 800;
   private final int gameHeight = 600;
   private final Game myGame;
@@ -70,18 +70,18 @@ public class GUITicTacToe {
   }
 
   private boolean renderWinFrame() {
-    if (result != WinState.NO_WIN) {
-      gameEndFrame = new JFrame();
-      gameEndFrame.setSize(gameWidth, gameHeight);
-      gameEndFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-      JButton button = new JButton(result.getMessage());
-      button.addActionListener(new GameEndButtonListener(this));
-      gameEndFrame.add(button);
-      gameEndFrame.setLocationRelativeTo(gameFrame);
-      gameEndFrame.setVisible(true);
-      return true;
+    if (result == WinState.NO_WIN) {
+      return false;
     }
-    return false;
+    gameEndFrame = new JFrame();
+    gameEndFrame.setSize(gameWidth, gameHeight);
+    gameEndFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+    JButton button = new JButton(result.getMessage());
+    button.addActionListener(new GameEndButtonListener(this));
+    gameEndFrame.add(button);
+    gameEndFrame.setLocationRelativeTo(gameFrame);
+    gameEndFrame.setVisible(true);
+    return true;
   }
 
   private boolean checkValidMove(int row, int col) {

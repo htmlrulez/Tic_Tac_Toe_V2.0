@@ -1,6 +1,6 @@
 import java.util.Scanner;
 
-public class ConsoleTicTacToe {
+public class ConsoleTicTacToe implements GameUI {
   private final Game myGame;
   private Scanner myScanner = new Scanner(System.in);
   private boolean gameOver = false;
