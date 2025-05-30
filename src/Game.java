@@ -8,7 +8,7 @@ public class Game {
   public Game(int gameRow, int gameColumn) {
     this.gameRow = gameRow;
     this.gameColumn = gameColumn;
-    this.gameArray = createAndPopulateGameGrid();
+    initializeGameGrid();
   }
 
   public int getGameRow() {
@@ -23,10 +23,9 @@ public class Game {
     return gameArray[row][column];
   }
 
-  public GridState[][] createAndPopulateGameGrid() {
+  public void initializeGameGrid() {
     gameArray = new GridState[gameRow][gameColumn];
     clearGameGrid();
-    return gameArray;
   }
 
   public void setCellState(int row, int col, GridState state) {

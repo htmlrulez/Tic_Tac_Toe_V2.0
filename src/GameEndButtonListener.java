@@ -1,11 +1,10 @@
-import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class gameEndButtonListener implements ActionListener {
+public class GameEndButtonListener implements ActionListener {
   private final GUITicTacToe gui;
 
-  public gameEndButtonListener(GUITicTacToe gui) {
+  public GameEndButtonListener(GUITicTacToe gui) {
     this.gui = gui;
   }
 

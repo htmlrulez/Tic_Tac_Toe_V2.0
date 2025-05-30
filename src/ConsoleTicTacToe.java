@@ -17,17 +17,17 @@ public class ConsoleTicTacToe {
         myGame.generateRandomAIMove();
         drawConsoleGameBorder();
         currentGameState = myGame.evaluateWinState(GridState.COMPUTER);
-        if (announceWinner(currentGameState)) {
+        if (announceWinner()) {
           break;
         }
         humanConsoleTurn();
         currentGameState = myGame.evaluateWinState(GridState.HUMAN);
-        if (announceWinner(currentGameState)) {
+        if (announceWinner()) {
           break;
         }
       }
       keepPlaying = consoleReset();
-      myGame.createAndPopulateGameGrid();
+      myGame.initializeGameGrid();
     }
   }
 
@@ -71,10 +71,10 @@ public class ConsoleTicTacToe {
     myGame.setCellState(row, col, GridState.HUMAN);
   }
 
-  private boolean announceWinner(WinState winState) {
-    if (winState != WinState.NO_WIN) {
+  private boolean announceWinner() {
+    if (currentGameState != WinState.NO_WIN) {
       drawConsoleGameBorder();
-      System.out.println(winState.getMessage());
+      System.out.println(currentGameState.getMessage());
       return true;
     }
     return false;

@@ -27,13 +27,13 @@ public class GUITicTacToe {
       return;
     }
     setHumanUIMove(row, col);
-    updateGUIButton(row, col, "X");
+    updateGUIButton(row, col, GridState.HUMAN);
 
     result = myGame.evaluateWinState(GridState.HUMAN);
-    if (!renderWinFrame(result)) {
+    if (!renderWinFrame()) {
       computerMove();
       result = myGame.evaluateWinState(GridState.COMPUTER);
-      renderWinFrame(result);
+      renderWinFrame();
     }
   }
 
@@ -69,13 +69,13 @@ public class GUITicTacToe {
     gameFrame.setVisible(true);
   }
 
-  private boolean renderWinFrame(WinState state) {
-    if (state != WinState.NO_WIN) {
+  private boolean renderWinFrame() {
+    if (result != WinState.NO_WIN) {
       gameEndFrame = new JFrame();
       gameEndFrame.setSize(gameWidth, gameHeight);
       gameEndFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-      JButton button = new JButton(state.getMessage());
-      button.addActionListener(new gameEndButtonListener(this));
+      JButton button = new JButton(result.getMessage());
+      button.addActionListener(new GameEndButtonListener(this));
       gameEndFrame.add(button);
       gameEndFrame.setLocationRelativeTo(gameFrame);
       gameEndFrame.setVisible(true);
@@ -96,14 +96,14 @@ public class GUITicTacToe {
     return allPlayableButtons[row][col];
   }
 
-  private void updateGUIButton(int row, int col, String symbol) {
+  private void updateGUIButton(int row, int col, GridState symbol) {
     JButton button = getButton(row, col);
-    button.setText(symbol);
+    button.setText(symbol.getSymbol());
     button.setEnabled(false);
   }
 
   private void computerMove() {
     AIMove aiMove = myGame.generateRandomAIMove();
-    updateGUIButton(aiMove.x, aiMove.y, "O");
+    updateGUIButton(aiMove.x, aiMove.y, GridState.COMPUTER);
   }
 }
